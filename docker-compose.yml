@@ -1,0 +1,30 @@
+version: "2"
+services:
+  yttrium:
+    image: yttrium
+    build:
+      context: .
+      args:
+        hubot_owner: "Jack Miner <3ch01c@gmail.com>"
+        hubot_name: "yttrium"
+        hubot_description: "Yttrium just wants to help"
+        hubot_adapter: "slack"
+        hubot_packages: "hubot-giphy lodash moment-timezone yamljs"
+        hubot_port: 8080
+        http_proxy: ""
+        https_proxy: ""
+    restart: always
+    user: hubot
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_URL=redis://redis:6379/yttrium
+    env_file:
+      - yttrium.env
+    links:
+      - redis
+  redis:
+    image: redis:alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - ./data:/data
